@@ -41,14 +41,14 @@ class _HomePageState extends State<HomePage> {
                       children: todoStore.todos
                           .map((todo) => ElevatedButton(
                                 onPressed: () =>
-                                    Modular.to.pushNamed('/detalhe/${todo.id}'),
+                                    Modular.to.pushNamed('/detalhe/${todo.id}').then((_) => todoStore.fetchTodos()),
                                 child: Text(todo.titulo),
                               ))
                           .toList(),
                     )),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Modular.to.pushNamed('/inclusao'),
+        onPressed: () => Modular.to.pushNamed('/inclusao').then((_) => todoStore.fetchTodos()),
         child: const Icon(Icons.add),
       ),
     );
