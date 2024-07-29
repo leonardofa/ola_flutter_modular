@@ -1,33 +1,42 @@
 import 'package:mobx/mobx.dart';
 import 'package:ola_flutter_modular/core/models/todo.model.dart';
 
+import '../helpers/dio.helper.dart';
+
 part 'todo.store.g.dart';
 
 class TodoStore = _TodoStore with _$TodoStore;
 
 abstract class _TodoStore with Store {
-  var _nextId = 3;
+  final _dio = DioHelper().dio();
 
   @observable
-  var todos = ObservableList<Todo>.of([
-    const Todo(id: 1, titulo: 'Estudar MobX'),
-    const Todo(id: 2, titulo: 'Estudar Flutter'),
-  ]);
-
+  var todos = ObservableList<Todo>.of([]);
 
   @action
-  void add(String titulo) {
-    todos.add(Todo(id: _nextId++, titulo: titulo));
+  Future<void> add(String titulo) async {
+    await _dio.post('/todos', data: {"titulo": titulo});
+    fetchTodos();
   }
 
   @action
-  void remove(int id) {
-    todos.removeWhere((todo) => todo.id == id);
+  Future<void> remove(String id) async {
+    await _dio.delete('/todos/$id');
+    fetchTodos();
   }
 
   @action
-  Todo findById(int id) {
+  Todo findById(String id) {
+    fetchTodos();
     return todos.firstWhere((todo) => todo.id == id);
+  }
+
+  @action
+  Future<void> fetchTodos() async {
+    final response = await _dio.get('/todos');
+    todos.clear();
+    var todosAPI = (response.data as List).map((json) => Todo.fromJson(json));
+    todos.addAll(todosAPI);
   }
 
 }

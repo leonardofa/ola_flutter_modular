@@ -8,6 +8,6 @@ class DetalheModule extends Module {
 
   @override
   void routes(r) {
-    r.child('/:id', child: (_) => DetalhePage(id: int.parse(r.args.params['id'])), transition: TransitionType.fadeIn);
+    r.child('/:id', child: (_) => DetalhePage(id: r.args.params['id']), transition: TransitionType.fadeIn);
   }
 }

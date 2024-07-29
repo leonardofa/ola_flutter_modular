@@ -7,7 +7,7 @@ import '../../core/stores/todo.store.dart';
 class DetalhePage extends StatelessWidget {
   DetalhePage({super.key, required this.id});
 
-  final int id;
+  final String id;
 
   final todoStore = Modular.get<TodoStore>();
 
@@ -28,7 +28,7 @@ class DetalhePage extends StatelessWidget {
                   child: const Text('Voltar'),
                 ),
                 IconButton(
-                  onPressed: () => onPressed(todo),
+                  onPressed: () => remove(todo, context),
                   icon: const Icon(
                     Icons.close,
                     color: Colors.red,
@@ -42,9 +42,32 @@ class DetalhePage extends StatelessWidget {
     );
   }
 
-  void onPressed(Todo todo) {
-    todoStore.remove(todo.id);
-    Modular.to.pop();
+  void remove(Todo todo, BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Excluir Todo'),
+          content:
+          const Text('Tem certeza que deseja excluir este todo?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                todoStore.remove(todo.id);
+                Modular.to.popUntil((route) => route.settings.name == '/');
+              },
+              child: const Text('Sim'),
+            ),
+            TextButton(
+              onPressed: () {
+                Modular.to.pop();
+              },
+              child: const Text('Não'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
 }
