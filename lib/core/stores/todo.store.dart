@@ -16,18 +16,15 @@ abstract class _TodoStore with Store {
   @action
   Future<void> add(String titulo) async {
     await _dio.post('/todos', data: {"titulo": titulo});
-    fetchTodos();
   }
 
   @action
   Future<void> remove(String id) async {
     await _dio.delete('/todos/$id');
-    fetchTodos();
   }
 
   @action
   Todo findById(String id) {
-    fetchTodos();
     return todos.firstWhere((todo) => todo.id == id);
   }
 

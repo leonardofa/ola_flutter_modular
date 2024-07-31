@@ -18,15 +18,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    fetchTodos();
+    fetchDados();
   }
 
-  Future<void> fetchTodos() async {
+  Future<void> fetchDados() async {
     setState(() => isLoading = true);
     await todoStore.fetchTodos();
-    Future.delayed(const Duration(seconds: 2), () {
-      setState(() => isLoading = false);
-    });
+    setState(() => isLoading = false);
   }
 
   @override

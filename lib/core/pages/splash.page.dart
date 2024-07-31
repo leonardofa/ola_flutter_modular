@@ -3,7 +3,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 class SplashPage extends StatelessWidget {
   SplashPage({super.key}) {
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 3), () {
       Modular.to.navigate("/home");
     });
   }
