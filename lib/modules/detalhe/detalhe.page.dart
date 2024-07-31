@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:ola_flutter_modular/core/models/todo.model.dart';
+import 'package:ola_flutter_modular/modules/detalhe/card.todo.dart';
 
 import '../../core/stores/todo.store.dart';
 
@@ -15,12 +16,11 @@ class DetalhePage extends StatefulWidget {
 
 class _DetalhePageState extends State<DetalhePage> {
   final todoStore = Modular.get<TodoStore>();
+  final String id;
   bool isLoading = false;
-  Todo todo = const Todo(id: "id", titulo: "titulo");
+  late Todo todo = todoStore.findById(id);
 
-  _DetalhePageState(String id) {
-    todo = Todo(id: id, titulo: '');
-  }
+  _DetalhePageState(this.id);
 
   @override
   void initState() {
@@ -28,10 +28,12 @@ class _DetalhePageState extends State<DetalhePage> {
     fetchDados();
   }
 
-  Future<void> fetchDados() async {
+  void fetchDados() {
     setState(() => isLoading = true);
-    todo = await todoStore.findById(todo.id);
-    setState(() => isLoading = false);
+    todo = todoStore.findById(todo.id);
+    Future.delayed(const Duration(seconds: 1), () {
+      setState(() => isLoading = false);
+    });
   }
 
   @override
@@ -43,7 +45,7 @@ class _DetalhePageState extends State<DetalhePage> {
             ? const CircularProgressIndicator()
             : Column(
                 children: [
-                  Text('Detalhando: ${todo.titulo}'),
+                  CardTodo(todo: todo),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
